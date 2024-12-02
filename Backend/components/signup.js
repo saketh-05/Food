@@ -1,18 +1,13 @@
-const express = require('express')
-// const mongoose = require('mongoose')
-const bcrypt = require('bcrypt')
-// mongoose.connect('mongodb://localhost:27017/foodieDetails')
-// .then(()=>{
-//   console.log("MongoDB is connected!")
-// })
-// .catch((err)=>{
-//   console.log("Unable to connect",err)
-// })
-const { MongoClient, ServerApiVersion } = require("mongodb");
-const uri =
-  "mongodb+srv://dsakethsurya:saketh1234@merncluster.c3k9g.mongodb.net/?retryWrites=true&w=majority&appName=MernCluster";
+const express = require('express');
+const bcrypt = require('bcrypt');
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const router = express.Router();
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+// MongoDB Atlas URI
+const uri =
+  "mongodb+srv://dsakethsurya:saketh1234@merncluster.c3k9g.mongodb.net/foodieDB?retryWrites=true&w=majority";
+
+// Initialize MongoDB Client
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -21,52 +16,56 @@ const client = new MongoClient(uri, {
   },
 });
 
-async function run() {
+// Connect to MongoDB
+async function connectDB() {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    );
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
+    console.log("Connected to MongoDB Atlas!");
+    console.log("check check");
+  } catch (err) {
+    console.error("Failed to connect to MongoDB:", err);
+    process.exit(1); // Exit the process if the connection fails
   }
 }
-run().catch(console.dir);
+connectDB();
 
-const User = require('../models/userSchema')
-const router = express.Router()
+// Set the database for operations
+const db = client.db("Food");
+const usersCollection = db.collection("users");
 
+// Signup Route
 router.post('/signup', async (req, res) => {
-    const { username, email, password  } = req.body;
-    try {
-      // Check if user already exists
-      let user = await User.findOne({username});
-      let emailVerified = await User.findOne({email})
-      if (user || emailVerified) {
-        return res.status(400).json({ message: 'Foodie already exists' });
-      }
-      // Hash the password before saving
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(password, salt);
-      // Create new user
-      user = new User({
-        username,
-        email,
-        password: hashedPassword,
-      });
-  
-      // Save user to the database
-      await user.save();
-  
-      res.status(201).json({ message: 'New Foodie Registered successfully' });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: 'Server error' });
+  res.status(200).send('Signup route works!');
+  const { username, email, password } = req.body;
+
+  try {
+    // Check if the user or email already exists
+    const existingUser = await usersCollection.findOne({ username });
+    const existingEmail = await usersCollection.findOne({ email });
+
+    if (existingUser || existingEmail) {
+      return res.status(400).json({ message: 'Foodie already exists' });
     }
+
+    // Hash the password before saving
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Create a new user object
+    const newUser = {
+      username,
+      email,
+      password: hashedPassword,
+    };
+
+    // Insert the new user into the database
+    await usersCollection.insertOne(newUser);
+
+    res.status(201).json({ message: 'New Foodie Registered successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
 });
 
-module.exports = router
+module.exports = router;

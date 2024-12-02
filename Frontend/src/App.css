@@ -1,42 +1,120 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+.app {
+  min-height: 100vh;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+}
+/* .app__content {
+  display: flex;
+  flex: 1;
+} */
+.app__main {
+  flex: 1;
+  padding: 2rem; 
+  margin-left: 200px;
+  margin-top: 6rem;
+}
+
+.app__footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 192px;
+  background-color: white;
+  border-top: 1px solid #ffe5e5;
+  padding-top: 1rem;
+  padding-bottom: 2rem; 
+  margin-top: 2rem;
+}
+
+.app__socials {
+  display: flex;
+  justify-content: center;
+  gap: 2rem; 
+}
+
+.app__social-link {
+  color: #e63946;
+  transition: color 0.3s ease;
+  text-decoration: none;
+}
+
+.app__social-link:hover {
+  color: #dc2626;
+}
+
+.app__icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+/* added css from whatsapp */
+
+/* Navbar */
+/* .navbar {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+  background-color: #ff6666;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+}
+
+.nav-icon {
+  width: 30px;
+  height: 30px;
+} */
+
+/* Body */
+.body {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 20px;
+}
+/* food card additional */
+.food-card {
   text-align: center;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.2s;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.food-card img {
+  width: 100%;
+  height: auto;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.food-card p {
+  margin: 10px 0;
+  font-weight: bold;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.food-card:hover {
+  transform: scale(1.05);
 }
 
-.card {
-  padding: 2em;
+/* Footer
+.footer {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 10px 0;
+  background-color: #ff4d4d;
+  color: white;
 }
 
-.read-the-docs {
-  color: #888;
+.footer a {
+  text-decoration: none;
+  color: white;
 }
+
+.footer a:hover {
+  text-decoration: underline;
+} */
