@@ -1,40 +1,62 @@
-import React from 'react';
-import { Twitter, Instagram, Mail } from 'lucide-react';
-import Navbar from './components/Navbar/Navbar';
-import Header from './components/Header/Header';
-import FoodGrid from './components/Foodgrid/Foodgrid';
-import './App.css';
-import './components/Navbar/Navbar.css';
-import './components/Header/Header.css';
-import './components/Foodgrid/Foodgrid.css';
+import "./App.css";
+import { useState, useEffect } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import SignupPage from "./pages/Signup";
+import LoginPage from "./pages/Login";
+import Home from "./pages/Home";
+import Recipe from "./pages/Recipe";
+import Profile from "./pages/Profile";
+import About from "./pages/About";
+import { initializeApp } from "./auth";
+import BackgroundAudio from "./components/backgroundAudio";
 
 function App() {
+  const [isLogin, setIsLogin] = useState(false);
+  const toggleLogin = () => {
+    console.log("Toggling login");
+    setIsLogin(true);
+  };
+  const toggleLogout = () => {
+    console.log("Toggling logout");
+    setIsLogin(false);
+  };
+  useEffect(() => {
+    const checkToken = async () => {
+      const res = await initializeApp();
+      console.log(res);
+      if (res === "Protected") {
+        setIsLogin(true);
+      } else {
+        setIsLogin(false);
+      } // Call this function on app load
+    };
+    checkToken();
+  }, []);
+
   return (
-    <div className="app">
-      <Header />
-      <div className="app__content">
-        <Navbar />
-        <main className="app__main">
-          <FoodGrid />
-        </main>
-        {/* footer begins :{) */}
-      <footer className="app__footer">
-        <div className="app__socials">
-          <a href="#" className="app__social-link">
-            <Twitter className="app__icon" />
-          </a>
-          <a href="#" className="app__social-link">
-            <Instagram className="app__icon" />
-          </a>
-          <a href="#" className="app__social-link">
-            <Mail className="app__icon" />
-          </a>
-        </div>
-      </footer>
-      </div>
-      
-    </div>
+    <BrowserRouter>
+      <Routes>
+        {isLogin ? (
+          <>
+            <Route path='/' element={<Home onLogout={toggleLogout} />} />
+            <Route path='/recipe/:id' element={<Recipe />} />
+            <Route path='/profile' element={<Profile />} />
+            <Route path='/about' element={<About />} />
+          </>
+        ) : (
+          <>
+            <Route
+              path='/login'
+              element={<LoginPage onLogin={toggleLogin} />}
+            />
+            <Route path='/signup' element={<SignupPage />} />
+          </>
+        )}
+        {!isLogin && <Route path='*' element={<Navigate to='/login' />} />}
+        {isLogin && <Route path='*' element={<Navigate to='/' />} />}
+      </Routes>
+      <BackgroundAudio />
+    </BrowserRouter>
   );
 }
-
 export default App;

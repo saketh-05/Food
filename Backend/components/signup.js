@@ -27,6 +27,7 @@ async function connectDB() {
     process.exit(1); // Exit the process if the connection fails
   }
 }
+
 connectDB();
 
 // Set the database for operations
@@ -37,7 +38,7 @@ const usersCollection = db.collection("users");
 router.post('/signup', async (req, res) => {
   res.status(200).send('Signup route works!');
   const { username, email, password } = req.body;
-
+  console.log(email, password, username);
   try {
     // Check if the user or email already exists
     const existingUser = await usersCollection.findOne({ username });

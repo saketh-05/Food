@@ -25,6 +25,7 @@
     justify-content: space-around;
     gap: 15rem;
     position: relative;
+    cursor: pointer;
   }
   
   .food-card:hover {

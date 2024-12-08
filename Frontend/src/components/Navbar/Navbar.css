@@ -32,10 +32,34 @@
     width: 1.75rem; 
     height: 1.75rem;
     color: #e63946; 
-    margin-bottom: 0.5rem; 
+    margin-bottom: 0.25rem; 
   }
   .navbar__label {
     font-size: 0.875rem; 
     color: #4a4a4a;
   }
+  .navbar__link--active {
+    background-color: #fef2f2;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+  }
   
+  @media screen and (max-width: 1050px) {
+    .navbar{
+      width: 7rem;
+    }
+    .app__footer{
+      width: 7rem;
+      border-right: 1px solid #ffe5e5;
+    }
+    .app__socials {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      justify-content: center;
+      align-items: center;
+    }
+    .navbar__items {
+      gap: 0.5rem;
+    }
+  }
