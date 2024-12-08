@@ -1,17 +1,19 @@
 .navbar {
     position: fixed;
     left: 0;
-    top: 10rem;
+    top: 7rem;
     width: 10rem;
     height: calc(100vh - 10rem);
-    background-color: white;
+    background-color: #f8f9fa;
     border-right: 1px solid #ffe5e5; 
     padding: 1rem;
   }
   .navbar__items {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     gap: 1.5rem;
+    height: 90%;
   }
 
   .navbar__link {
@@ -35,11 +37,11 @@
     margin-bottom: 0.25rem; 
   }
   .navbar__label {
-    font-size: 0.875rem; 
+    font-size: 1rem; 
     color: #4a4a4a;
   }
   .navbar__link--active {
-    background-color: #fef2f2;
+    background-color: #f8f9fa;
     border-radius: 0.5rem;
     padding: 0.5rem 1rem;
   }

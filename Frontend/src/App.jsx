@@ -8,7 +8,7 @@ import Recipe from "./pages/Recipe";
 import Profile from "./pages/Profile";
 import About from "./pages/About";
 import { initializeApp } from "./auth";
-import BackgroundAudio from "./components/backgroundAudio";
+import BackgroundAudio from "./components/BackgroundAudio";
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
