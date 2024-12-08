@@ -1,6 +1,7 @@
 .profile-page {
+    margin-top: -15rem;
     padding: 2rem;
-    background-color: #f3f4f6;
+    background-color: #ffffff;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
