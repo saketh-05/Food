@@ -19,6 +19,7 @@ function App() {
   const toggleLogout = () => {
     console.log("Toggling logout");
     setIsLogin(false);
+    localStorage.removeItem("token");
   };
   useEffect(() => {
     const checkToken = async () => {

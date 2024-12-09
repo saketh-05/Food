@@ -1,11 +1,11 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
-const { SignJWT, jwtVerify } = require('jose');
+const { SignJWT } = require('jose');
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const router = express.Router();
 
 const uri =
-  "mongodb+srv://dsakethsurya:saketh1234@merncluster.c3k9g.mongodb.net/foodieDB?retryWrites=true&w=majority";
+  "mongodb+srv://dsakethsurya:saketh1234@merncluster.c3k9g.mongodb.net/?retryWrites=true&w=majority&appName=MernCluster";
 
 // Initialize MongoDB Client
 const client = new MongoClient(uri, {

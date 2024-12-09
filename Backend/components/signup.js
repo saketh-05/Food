@@ -1,11 +1,11 @@
-const express = require('express');
-const bcrypt = require('bcrypt');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const express = require("express");
+const bcrypt = require("bcrypt");
+const { MongoClient, ServerApiVersion } = require("mongodb");
 const router = express.Router();
 
 // MongoDB Atlas URI
 const uri =
-  "mongodb+srv://dsakethsurya:saketh1234@merncluster.c3k9g.mongodb.net/foodieDB?retryWrites=true&w=majority";
+  "mongodb+srv://dsakethsurya:saketh1234@merncluster.c3k9g.mongodb.net/?retryWrites=true&w=majority&appName=MernCluster";
 
 // Initialize MongoDB Client
 const client = new MongoClient(uri, {
@@ -36,36 +36,33 @@ const usersCollection = db.collection("users");
 
 // Signup Route
 router.post('/signup', async (req, res) => {
-  res.status(200).send('Signup route works!');
   const { username, email, password } = req.body;
-  console.log(email, password, username);
+  console.log(username, email, password); // Log the user data
   try {
     // Check if the user or email already exists
     const existingUser = await usersCollection.findOne({ username });
     const existingEmail = await usersCollection.findOne({ email });
 
     if (existingUser || existingEmail) {
-      return res.status(400).json({ message: 'Foodie already exists' });
+      return res.status(400).json({ message: "Foodie already exists" });
     }
 
     // Hash the password before saving
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-
     // Create a new user object
     const newUser = {
       username,
       email,
       password: hashedPassword,
     };
-
     // Insert the new user into the database
     await usersCollection.insertOne(newUser);
 
-    res.status(201).json({ message: 'New Foodie Registered successfully' });
+    res.status(200).json({ message: "New Foodie Registered successfully" });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 });
 

@@ -4,6 +4,7 @@ import FormExtra from "./formExtra";
 import FormAction from "./formAction";
 import { useNavigate } from "react-router-dom";
 import confetti from "canvas-confetti";
+import StyledAlert from "../StyledAlert";
 
 const loginFields = [
   {
@@ -43,7 +44,9 @@ let fieldsState = {};
 fields.forEach((field) => (fieldsState[field.id] = ""));
 
 export default function Login({ onLogin }) {
+  const [alert, setAlert] = useState(false);
   const navigate = useNavigate();
+  const showText = "🎉 Login Successful! Redirecting... 🤩";
   const [loginState, setLoginState] = useState(fieldsState);
   // const audio = new Audio(luffyOGG);
   const handleChange = (e) => {
@@ -75,9 +78,13 @@ export default function Login({ onLogin }) {
       if (data.message === "Login successful") {
         localStorage.setItem("token", data.token);
         console.log("User authenticated token = ", data.token);
-        fireConfetti();
-        onLogin();
-        navigate("/");
+        setAlert(true);
+        setTimeout(() => {
+          fireConfetti();
+          onLogin();
+          navigate("/");
+          setAlert(false);
+        }, 3000);
       } else {
         console.log("User not authenticated");
         alert("Invalid credentials! please try again...");
@@ -89,25 +96,28 @@ export default function Login({ onLogin }) {
   };
 
   return (
-    <form className='mt-8 space-y-6'>
-      <div className='-space-y-px'>
-        {fields.map((field) => (
-          <Input
-            key={field.id}
-            handleChange={handleChange}
-            value={loginState[field.id]}
-            labelText={field.labelText}
-            labelFor={field.labelFor}
-            id={field.id}
-            name={field.name}
-            type={field.type}
-            isRequired={field.isRequired}
-            placeholder={field.placeholder}
-          />
-        ))}
-      </div>
-      <FormExtra />
-      <FormAction handleSubmit={handleSubmit} text={"Login"} />
-    </form>
+    <>
+      <form className='mt-8 space-y-6'>
+        <div className='-space-y-px'>
+          {fields.map((field) => (
+            <Input
+              key={field.id}
+              handleChange={handleChange}
+              value={loginState[field.id]}
+              labelText={field.labelText}
+              labelFor={field.labelFor}
+              id={field.id}
+              name={field.name}
+              type={field.type}
+              isRequired={field.isRequired}
+              placeholder={field.placeholder}
+            />
+          ))}
+        </div>
+        <FormExtra />
+        <FormAction handleSubmit={handleSubmit} text={"Login"} />
+      </form>
+      {alert && <StyledAlert text={showText} />}
+    </>
   );
 }

@@ -3,44 +3,54 @@ import { useNavigate } from 'react-router-dom';
 
 const recommandedFoodItems = [
   {
-    id: 1,
-    title: 'Margherita Pizza',
-    image: 'https://images.unsplash.com/photo-1604382355076-af4b0eb60143?auto=format&fit=crop&w=800&q=80',
+    id: 658615,
+    title: 'Roasted Peppers, Spinach & Feta Pizza',
+    image: 'https://img.spoonacular.com/recipes/658615-312x231.jpg',
   },
   {
-    id: 2,
-    title: 'Sushi Platter',
-    image: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=800&q=80',
+    id: 648506,
+    title: 'Japanese Sushi',
+    image: 'https://img.spoonacular.com/recipes/648506-312x231.jpg',
   },
   {
-    id: 3,
-    title: 'Beef Burger',
-    image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80',
+    id: 637631,
+    title: 'Cheesy Bacon Burger with Spicy Chipotle Aiolo Sauce',
+    image: 'https://img.spoonacular.com/recipes/637631-312x231.jpg',
   },
   {
-    id: 4,
-    title: 'Pasta Carbonara',
-    image: 'https://images.unsplash.com/photo-1612874742237-6526221588e3?auto=format&fit=crop&w=800&q=80',
+    id: 655575,
+    title: 'Penne Pasta with Broccoli and Cheese',
+    image: 'https://img.spoonacular.com/recipes/655575-312x231.jpg',
   },
   {
-    id: 5,
-    title: 'Thai Green Curry',
-    image: 'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?auto=format&fit=crop&w=800&q=80',
+    id: 645541,
+    title: 'Green Thai Curry with Beef',
+    image: 'https://img.spoonacular.com/recipes/645541-312x231.jpg',
   },
   {
-    id: 6,
-    title: 'Caesar Salad',
-    image: 'https://images.unsplash.com/photo-1550304943-4f24f54ddde9?auto=format&fit=crop&w=800&q=80',
+    id: 662632,
+    title: 'Sweet Summer Salad',
+    image: 'https://img.spoonacular.com/recipes/662632-312x231.jpg',
   },
   {
-    id: 7,
-    title: 'Chicken Tikka',
-    image: 'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=800&q=80',
+    id: 1095743,
+    title: 'Coconut Curry Ramen Noodles',
+    image: 'https://img.spoonacular.com/recipes/1095743-312x231.jpg',
   },
   {
-    id: 8,
-    title: 'Ramen Bowl',
-    image: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=800&q=80',
+    id: 653472,
+    title: 'Oatmeal Pancake (Yummy & Heart Healthy)',
+    image: 'https://img.spoonacular.com/recipes/653472-312x231.jpg',
+  },
+  {
+    id: 649777,
+    title: 'Lemon Scented Polenta Pancakes with Blueberry Thyme Syrup',
+    image: 'https://img.spoonacular.com/recipes/649777-312x231.jpg',
+  },
+  {
+    id: 633751,
+    title: 'Baked Pumpkin Chocolate Chip Pancakes',
+    image: 'https://img.spoonacular.com/recipes/633751-312x231.jpg',
   },
 ];
 

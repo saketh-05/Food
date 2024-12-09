@@ -22,7 +22,7 @@ export default function Home({onLogout}) {
 
   const handleSearchInput = (value) => {
     console.log(value);
-    const apiUrl = `https://api.spoonacular.com/recipes/complexSearch?query=${value}&number=5`;
+    const apiUrl = `https://api.spoonacular.com/recipes/complexSearch?query=${value}&number=50`;
     fetch(apiUrl, {
       method: "GET",
       headers: {

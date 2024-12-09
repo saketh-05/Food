@@ -127,3 +127,18 @@
 .footer a:hover {
   text-decoration: underline;
 } */
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  20%, 80% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+}
