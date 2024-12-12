@@ -33,19 +33,36 @@ export default function LoginPage({ onLogin }) {
       colors: ["#26d0ce", "#a6ffcb", "#f0ff00", "#ff00e0", "#ff0000"],
     });
   }
-  const handleLoginSuccess = (response) => {
+  const handleLoginSuccess = async (response) => {
     console.log('Login Success:', response);
     const userData = jwtDecode(response.credential);
-    localStorage.setItem("token", response.clientId);
     localStorage.setItem("userData", JSON.stringify(userData));
     console.log('User Data:', userData);
-    setAlert(true);
-        setTimeout(() => {
-          fireConfetti();
-          onLogin(userData);
-          navigate("/");
-          setAlert(false);
-        }, 3000);
+    await fetch('https://localhost:3000/googlelogin', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log('Data:', data);
+        if (data.message === 'Login successful') {
+          console.log('Google Login Successful');
+          localStorage.setItem('token', data.token);
+          setAlert(true);
+          setTimeout(() => {
+            fireConfetti();
+            onLogin(userData);
+            navigate('/');
+            setAlert(false);
+          }, 3000);
+        } else {
+          console.error('Login Failed');
+          alert('Login failed. Please try again.');
+        }
+      });
   };
 
   const handleLoginError = () => {

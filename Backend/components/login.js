@@ -59,11 +59,11 @@ router.post('/login', async (req, res) => {
 });
 
 router.post('/googlelogin', async (req, res) => {
-  const { clientID, email, username } = req.body;
+  const { email, name } = req.body;
   try {
       console.log('creating google user token...');
       // Generate JWT using jsonwebtoken
-      const token = await new jwt.sign({clientID:clientID, email:email, username:username }, 'my_secret', '3h');
+      const token = await new jwt.sign({email:email, name:name }, 'my_secret', '3h');
       res.status(200).json({ message: "Login successful", token: token });
   } catch (err) {
     console.error(err);

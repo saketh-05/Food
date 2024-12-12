@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import {SignJWT} from "jose";
 // Description: This file contains the functions to handle user authentication.
 
 export async function initializeApp() {
@@ -7,7 +7,7 @@ export async function initializeApp() {
   if (token) {
     try {
       // Verify the token using jose
-      const payload = jwt.verify(token, "my_secret");
+      const payload = SignJWT(token, "my_secret");
       // Check expiration
       const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
       if (payload.exp && payload.exp < currentTime) {
