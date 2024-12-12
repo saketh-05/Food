@@ -36,9 +36,9 @@ export default function LoginPage({ onLogin }) {
   const handleLoginSuccess = async (response) => {
     console.log('Login Success:', response);
     const userData = jwtDecode(response.credential);
-    localStorage.setItem("userData", JSON.stringify(userData));
+    // localStorage.setItem("userData", JSON.stringify(userData));
     console.log('User Data:', userData);
-    await fetch('https://localhost:3000/googlelogin', {
+    await fetch('http://localhost:3000/googlelogin', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -62,11 +62,10 @@ export default function Login({ onLogin }) {
   const authenticateUser = async () => {
     try {
       console.log(loginState);
-      const response = await fetch("https://localhost:3000/login", {
+      const response = await fetch("http://localhost:3000/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json", // Specify the content type
-          Authorization: "Bearer <token>",
         },
         body: JSON.stringify(loginState),
       });

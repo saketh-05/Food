@@ -1,13 +1,14 @@
-import {SignJWT} from "jose";
+import {jwtDecode} from "jwt-decode";
 // Description: This file contains the functions to handle user authentication.
 
 export async function initializeApp() {
   const token = localStorage.getItem("token");
   //&& /^[A-Za-z0-9-_=]+\.([A-Za-z0-9-_=]+\.?)+$/.test(token)
   if (token) {
+    //const publicKey = new TextEncoder().encode("my_secret");
     try {
       // Verify the token using jose
-      const payload = SignJWT(token, "my_secret");
+      const payload = jwtDecode(token);
       // Check expiration
       const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
       if (payload.exp && payload.exp < currentTime) {

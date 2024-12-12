@@ -14,6 +14,7 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.1",
     "google-auth-library": "^9.15.0",
+    "http": "^0.0.1-security",
     "https": "^1.0.0",
     "jose": "^5.9.6",
     "jsonwebtoken": "^9.0.2",

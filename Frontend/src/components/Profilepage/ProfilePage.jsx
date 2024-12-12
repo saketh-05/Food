@@ -4,13 +4,13 @@ import { BookmarksSection } from '../Bookmark/BookmarksSection';
 import { EditProfileModal } from '../EditProfile/EditProfileModal';
 import './ProfilePage.css';
 
-const mockProfile = {
-  id: '1',
-  name: 'John Doe',
-  email: 'john@example.com',
-  bio: 'Food enthusiast and amateur chef',
-  avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=John',
-};
+// const mockProfile = {
+//   id: '1',
+//   name: 'John Doe',
+//   email: 'john@example.com',
+//   bio: 'Food enthusiast and amateur chef',
+//   avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=John',
+// };
 
 const mockBookmarks = [
   {
@@ -29,8 +29,15 @@ const mockBookmarks = [
   },
 ];
 
-export const ProfilePage = () => {
-  const [profile, setProfile] = useState(mockProfile);
+export const ProfilePage = async () => {
+  //localStorage.getItem('token') != {} ? localStorage.getItem('token'):
+  const Data = localStorage.getItem('userData');
+  const userProfile = {
+    id: Data.userID ? Data.userID : null,
+    username: Data.name,
+    email: Data.email
+  }
+  const [profile, setProfile] = useState(userProfile);
   const [bookmarks, setBookmarks] = useState(mockBookmarks);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 

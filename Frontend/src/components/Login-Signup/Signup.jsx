@@ -66,7 +66,7 @@ export default function Signup() {
   //handle Signup API Integration here
   const createAccount = async () => {
     console.log(signupState);
-    await fetch("https://localhost:3000/signup", {
+    await fetch("http://localhost:3000/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

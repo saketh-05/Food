@@ -49,9 +49,14 @@ router.post('/login', async (req, res) => {
     }
 
     // Generate JWT using jose
-    const token = await new jwt.sign({ userID: existingUser._id, username:existingUser.username, email:existingUser.email }, 'my_secret', '3h');
-
-    res.status(200).json({ message: "Login successful", token: token });
+    console.log(existingUser._id," and ",existingUser.username," and ",existingUser.email);
+    const payload = {
+      userID: existingUser._id,
+      name: existingUser.username,
+      email: existingUser.email,
+    };
+    const token = await jwt.sign(payload, 'my_secret', {expiresIn:'3h'});
+    res.status(200).json({ message: "Login successful", token });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Internal server error' });
@@ -62,9 +67,26 @@ router.post('/googlelogin', async (req, res) => {
   const { email, name } = req.body;
   try {
       console.log('creating google user token...');
+      console.log('Payload: ',email,name);
+      const identifyUser = await usersCollection.findOne({email});
+      if(!identifyUser){
+        console.log("triggering google user identification");
+        const newUser = {
+          username : name,
+          email,
+        };
+        // Insert the new user into the database
+        await usersCollection.insertOne(newUser);
+        console.log("added google user");
+      }
       // Generate JWT using jsonwebtoken
-      const token = await new jwt.sign({email:email, name:name }, 'my_secret', '3h');
-      res.status(200).json({ message: "Login successful", token: token });
+      const payload = {
+        userID: identifyUser._id,
+        name,
+        email
+      };
+      const token = await jwt.sign(payload, 'my_secret', {expiresIn:'3h'});
+      res.status(200).json({ message: "Login successful", token });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Internal server error' });

@@ -1,13 +1,13 @@
 const express = require("express");
 const cors = require("cors");
 const fs = require("fs");
-const https = require("https");
+const http = require("http");
 const app = express();
 app.use(express.json());
 
-const key = fs.readFileSync('localhost-key.pem', 'utf8');
-const cert = fs.readFileSync('localhost.pem', 'utf8');
-const options = { key, cert };
+// const key = fs.readFileSync('localhost-key.pem', 'utf8');
+// const cert = fs.readFileSync('localhost.pem', 'utf8');
+// const options = { key, cert };
 
 const signupRoute = require("./components/signup");
 const loginRoute = require("./components/login");
@@ -19,7 +19,8 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
   credentials: true, // Include credentials if needed
 }));
-https.createServer(options, app).listen(3000, () => {
+
+http.createServer(app).listen(3000, () => {
   console.log(`Server is running on port 3000`);
 });
 

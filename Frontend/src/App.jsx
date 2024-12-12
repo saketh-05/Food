@@ -28,11 +28,11 @@ function App() {
     const checkToken = async () => {
       const res = await initializeApp();
       console.log(res);
-      const data = await res.json();
-      if (data.message === "Protected") {
+      if (res.message === "Protected") {
         setIsLogin(true);
       } else {
         setIsLogin(false);
+        console.log(res.message);
       } // Call this function on app load
     };
     checkToken();
