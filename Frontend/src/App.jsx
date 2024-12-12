@@ -20,12 +20,16 @@ function App() {
     console.log("Toggling logout");
     setIsLogin(false);
     localStorage.removeItem("token");
+    if(localStorage.getItem("userData")){
+      localStorage.removeItem("userData");
+    }
   };
   useEffect(() => {
     const checkToken = async () => {
       const res = await initializeApp();
       console.log(res);
-      if (res === "Protected") {
+      const data = await res.json();
+      if (data.message === "Protected") {
         setIsLogin(true);
       } else {
         setIsLogin(false);

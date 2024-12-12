@@ -1,19 +1,27 @@
 const express = require("express");
 const cors = require("cors");
+const fs = require("fs");
+const https = require("https");
 const app = express();
 app.use(express.json());
 
+const key = fs.readFileSync('localhost-key.pem', 'utf8');
+const cert = fs.readFileSync('localhost.pem', 'utf8');
+const options = { key, cert };
+
 const signupRoute = require("./components/signup");
 const loginRoute = require("./components/login");
-
 app.use(express.json());
 console.log("connecting");
 
 app.use(cors({
-  origin: 'http://localhost:5173', // Replace with your frontend URL
+  origin: 'https://localhost:5173', // Replace with your frontend URL
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
   credentials: true, // Include credentials if needed
 }));
+https.createServer(options, app).listen(3000, () => {
+  console.log(`Server is running on port 3000`);
+});
 
 app.use("/", loginRoute);
 app.use("/", signupRoute);
@@ -42,11 +50,8 @@ app.get('/test',(req, res) => {
 // });
 // This is to test for 404 error
 
-app.use((req, res, next) => {
-  res.status(404).send(`Route not found: ${req.originalUrl}`);
-});
-
 //This is to test for listening to the port
-app.listen(3000, () => {
-  console.log(`Server is running on port 3000`);
+
+app.get('/', (req, res) => {
+  res.send('Hello, HTTPS world!');
 });

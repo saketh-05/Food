@@ -1,6 +1,6 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
-const { SignJWT } = require('jose');
+const jwt = require('jsonwebtoken');
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const router = express.Router();
 
@@ -29,8 +29,6 @@ connectDB();
 const db = client.db("Food");
 const usersCollection = db.collection("users");
 
-const secretKey = new TextEncoder().encode('user_token'); // Replace with your actual secret key
-
 // Login Route
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
@@ -51,10 +49,7 @@ router.post('/login', async (req, res) => {
     }
 
     // Generate JWT using jose
-    const token = await new SignJWT({ userID: existingUser._id })
-      .setProtectedHeader({ alg: 'HS256' })
-      .setExpirationTime('3h')
-      .sign(secretKey);
+    const token = await new jwt.sign({ userID: existingUser._id, username:existingUser.username, email:existingUser.email }, 'my_secret', '3h');
 
     res.status(200).json({ message: "Login successful", token: token });
   } catch (err) {
@@ -63,27 +58,17 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// // Authentication Middleware
-// const authenticate = async (req, res, next) => {
-//   const token = req.headers.authorization?.split(' ')[1];
-//   if (!token) {
-//     return res.status(401).json({ message: 'Unauthorized' });
-//   }
-
-//   try {
-//     // Verify JWT using jose
-//     const { payload } = await jwtVerify(token, secretKey);
-//     req.userID = payload.userID;
-//     next();
-//   } catch (err) {
-//     console.error(err);
-//     res.status(401).json({ message: 'Unauthorized' });
-//   }
-// };
-
-// // Protected Route
-// router.get('/api/protected', authenticate, (req, res) => {
-//   res.status(200).json({ message: 'Protected' });
-// });
+router.post('/googlelogin', async (req, res) => {
+  const { clientID, email, username } = req.body;
+  try {
+      console.log('creating google user token...');
+      // Generate JWT using jsonwebtoken
+      const token = await new jwt.sign({clientID:clientID, email:email, username:username }, 'my_secret', '3h');
+      res.status(200).json({ message: "Login successful", token: token });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 module.exports = router;
