@@ -6,7 +6,7 @@
   .modal-backdrop {
     position: fixed;
     inset: 0;
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(175, 161, 161, 0.61);
   }
   
   .modal-container {

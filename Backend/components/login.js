@@ -55,7 +55,7 @@ router.post('/login', async (req, res) => {
       name: existingUser.username,
       email: existingUser.email,
     };
-    const token = await jwt.sign(payload, 'my_secret', {expiresIn:'3h'});
+    const token = jwt.sign(payload, 'my_secret', {expiresIn:'3h'});
     res.status(200).json({ message: "Login successful", token });
   } catch (err) {
     console.error(err);
@@ -81,11 +81,10 @@ router.post('/googlelogin', async (req, res) => {
       }
       // Generate JWT using jsonwebtoken
       const payload = {
-        userID: identifyUser._id,
         name,
         email
       };
-      const token = await jwt.sign(payload, 'my_secret', {expiresIn:'3h'});
+      const token = jwt.sign(payload, 'my_secret', {expiresIn:'3h'});
       res.status(200).json({ message: "Login successful", token });
   } catch (err) {
     console.error(err);

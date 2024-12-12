@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import Recipe from "./pages/Recipe";
 import Profile from "./pages/Profile";
 import About from "./pages/About";
+import Help from "./pages/Help";
 import { initializeApp } from "./auth";
 import BackgroundAudio from "./components/BackgroundAudio";
 
@@ -47,6 +48,7 @@ function App() {
             <Route path='/recipe/:id' element={<Recipe />} />
             <Route path='/profile' element={<Profile />} />
             <Route path='/about' element={<About />} />
+            <Route path='/help' element={<Help/>} />
           </>
         ) : (
           <>

@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Input from "./Input";
-import FormExtra from "./formExtra";
+// import FormExtra from "./formExtra";
 import FormAction from "./formAction";
 import { useNavigate } from "react-router-dom";
 import confetti from "canvas-confetti";
@@ -113,7 +113,8 @@ export default function Login({ onLogin }) {
             />
           ))}
         </div>
-        <FormExtra />
+        {/* Not implemented yet */}
+        {/* <FormExtra /> */}
         <FormAction handleSubmit={handleSubmit} text={"Login"} />
       </form>
       {alert && <StyledAlert text={showText} />}
