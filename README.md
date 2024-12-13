@@ -1,4 +1,4 @@
-# Food-main Project
+# FoodTube Project
 
 ## Overview
 The **Food-main** project is a web application designed for managing food-related services. It features a React-based frontend, a Node.js backend with Express, and MongoDB for database interactions. The project is containerized using Docker for seamless deployment.
