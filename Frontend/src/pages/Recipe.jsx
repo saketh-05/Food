@@ -15,7 +15,7 @@ export default function Recipe() {
         const response = await fetch(apiUrl, {
           method: "GET",
           headers: {
-            "x-api-key": "3a55f59cdb6d4131a3ebb3dc18463a7b",
+            "x-api-key": import.meta.env.VITE_SPOONACULAR_API,
           },
         });
         const data = await response.json();

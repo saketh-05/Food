@@ -19,27 +19,14 @@ export default function Home({ onLogout }) {
   const pageTransition = {
     duration: 1,
   };
-  // useEffect(() => {
-  //   const urlParams = new URLSearchParams(window.location.hash.substring(1));
-  //   const accessToken = urlParams.get("access_token");
-  //   console.log("Access Token:", accessToken);
-
-  //   if (accessToken) {
-  //     // Fetch user info
-  //     fetch("https://www.googleapis.com/token", {
-  //       headers: { Authorization: `Bearer ${accessToken}` },
-  //     })
-  //       .then((response) => response.json())
-  //       .then((userInfo) => console.log(userInfo));
-  //   }
-  // }, []);
+  
   const handleSearchInput = (value) => {
     console.log(value);
-    const apiUrl = `https://api.spoonacular.com/recipes/complexSearch?query=${value}&number=50`;
+    const apiUrl = `https://api.spoonacular.com/recipes/complexSearch?query=${value}&number=75`;
     fetch(apiUrl, {
       method: "GET",
       headers: {
-        "x-api-key": "3a55f59cdb6d4131a3ebb3dc18463a7b",
+        "x-api-key": import.meta.env.VITE_SPOONACULAR_API,
       },
     })
       .then((response) => {
