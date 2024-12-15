@@ -21,14 +21,14 @@ jobs:
     # Step 3: Build and push frontend image
     - name: Build and push frontend Docker image
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/Frontend:latest -f Frontend/Dockerfile ./Frontend
-        docker push ${{ secrets.DOCKER_USERNAME }}/Frontend:latest
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend:latest -f Frontend/Dockerfile ./Frontend
+        docker push ${{ secrets.DOCKER_USERNAME }}/frontend:latest
 
     # Step 4: Build and push backend image
     - name: Build and push backend Docker image
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/Backend:latest -f Backend/Dockerfile ./Frontend
-        docker push ${{ secrets.DOCKER_USERNAME }}/Backend:latest
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/backend:latest -f Backend/Dockerfile ./Frontend
+        docker push ${{ secrets.DOCKER_USERNAME }}/backend:latest
 
   deploy:
     needs: build-and-push
@@ -48,16 +48,16 @@ jobs:
       run: |
         ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
           # Pull the latest images
-          docker pull ${{ secrets.DOCKER_USERNAME }}/Frontend:latest
-          docker pull ${{ secrets.DOCKER_USERNAME }}/Backend:latest
+          docker pull ${{ secrets.DOCKER_USERNAME }}/frontend:latest
+          docker pull ${{ secrets.DOCKER_USERNAME }}/backend:latest
 
           # Stop and remove existing containers (if any)
-          docker stop Frontend || true && docker rm Frontend || true
-          docker stop Backend || true && docker rm Backend || true
+          docker stop frontend || true && docker rm frontend || true
+          docker stop backend || true && docker rm backend || true
 
           # Run the frontend container
-          docker run -d --name Frontend -p 80:80 ${{ secrets.DOCKER_USERNAME }}/Frontend:latest
+          docker run -d --name frontend -p 80:80 ${{ secrets.DOCKER_USERNAME }}/frontend:latest
 
           # Run the backend container
-          docker run -d --name Backend -p 5000:5000 ${{ secrets.DOCKER_USERNAME }}/Backend:latest
+          docker run -d --name backend -p 5000:5000 ${{ secrets.DOCKER_USERNAME }}/backend:latest
         EOF
