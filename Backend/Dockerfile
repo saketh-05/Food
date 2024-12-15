@@ -1,13 +1,6 @@
 # Use the official Node.js 20 image
 FROM node:20
 
-ARG MONGODB_USERNAME
-ARG MONGODB_PASSWORD
-
-# Set the environment variables
-ENV MONGODB_USERNAME=$MONGODB_USERNAME
-ENV MONGODB_PASSWORD=$MONGODB_PASSWORD
-
 # Set the working directory
 WORKDIR /usr/src/app
 
