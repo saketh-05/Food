@@ -21,13 +21,13 @@ jobs:
     # Step 3: Build and push frontend image
     - name: Build and push frontend Docker image
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/Frontend:latest -f ./Frontend
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/Frontend:latest -f Frontend/Dockerfile ./Frontend
         docker push ${{ secrets.DOCKER_USERNAME }}/Frontend:latest
 
     # Step 4: Build and push backend image
     - name: Build and push backend Docker image
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/Backend:latest -f ./Backend
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/Backend:latest -f Backend/Dockerfile ./Frontend
         docker push ${{ secrets.DOCKER_USERNAME }}/Backend:latest
 
   deploy:
