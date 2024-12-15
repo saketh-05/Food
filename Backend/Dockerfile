@@ -1,8 +1,8 @@
 # Use the official Node.js 20 image
 FROM node:20
 
-ARG MONGODB_USERNAME = "dsakethsurya"
-ARG MONGODB_PASSWORD = "saketh1234"
+ARG MONGODB_USERNAME
+ARG MONGODB_PASSWORD
 
 # Set the environment variables
 ENV MONGODB_USERNAME=$MONGODB_USERNAME
