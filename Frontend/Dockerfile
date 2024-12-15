@@ -1,5 +1,5 @@
 # Use the official Node.js 20 image
-FROM node:alpine3.18 as builder
+FROM node:18 as builder
 
 # Set the working directory
 WORKDIR /usr/src/app
@@ -23,7 +23,7 @@ WORKDIR /usr/share/nginx/html
 
 RUN rm -rf *
 
-COPY --from=builder /usr/src/app/build .
+COPY --from=builder /usr/src/app/dist .
 
 # Expose port 80 and start nginx
 EXPOSE 80
