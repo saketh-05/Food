@@ -19,7 +19,9 @@ RUN npm run build
 FROM nginx:stable-alpine
 
 # Copy built files from the builder stage
-COPY --from=builder /app/dist /usr/share/nginx/html
+WORKDIR /usr/share/nginx/html
+
+COPY --from=builder /usr/src/app/build .
 
 RUN rm -rf *
 
