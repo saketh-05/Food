@@ -8,6 +8,7 @@ import Recipe from "./pages/Recipe";
 import Profile from "./pages/Profile";
 import About from "./pages/About";
 import Help from "./pages/Help";
+import NotFoundPage from "./pages/404page";
 import { initializeApp } from "./auth";
 import BackgroundAudio from "./components/BackgroundAudio";
 
@@ -49,6 +50,7 @@ function App() {
             <Route path='/profile' element={<Profile />} />
             <Route path='/about' element={<About />} />
             <Route path='/help' element={<Help/>} />
+            <Route path='*' element={<NotFoundPage />} />
           </>
         ) : (
           <>
@@ -57,6 +59,7 @@ function App() {
               element={<LoginPage onLogin={toggleLogin} />}
             />
             <Route path='/signup' element={<SignupPage />} />
+            <Route path='*' element={<NotFoundPage />} />
           </>
         )}
         {!isLogin && <Route path='*' element={<Navigate to='/login' />} />}
