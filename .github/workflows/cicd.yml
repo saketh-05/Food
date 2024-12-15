@@ -96,9 +96,9 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/frontend:latest
             docker pull ${{ secrets.DOCKER_USERNAME }}/backend:latest
       
-            # Stop and remove existing containers (if any)
-            docker stop frontend || true && docker rm frontend || true
-            docker stop backend || true && docker rm backend || true
+            # # Stop and remove existing containers (if any)
+            # docker stop frontend || true && docker rm frontend || true
+            # docker stop backend || true && docker rm backend || true
 
             # Run the frontend container
             docker run -d --name frontend -p 443:5173 ${{ secrets.DOCKER_USERNAME }}/frontend:latest
