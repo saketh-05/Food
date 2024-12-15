@@ -23,5 +23,5 @@ COPY . .
 # Expose port 3000
 EXPOSE 3000
 
-# Command to run your Node.js server
-CMD ["node","index.js"]
+# Command to run your Node.js serve
+ENTRYPOINT ["node","index.js"]
