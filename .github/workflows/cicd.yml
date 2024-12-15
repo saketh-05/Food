@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v3
 
       # Step 2: Log in to Docker Hub
-      - name: Log in to Docker Hub`
+      - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       # Step 3: Build and push frontend image
@@ -27,27 +27,28 @@ jobs:
       # Step 4: Build and push backend image
       - name: Build and push backend Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/backend:latest -f Backend/Dockerfile ./Frontend
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/backend:latest -f Backend/Dockerfile ./Backend
           docker push ${{ secrets.DOCKER_USERNAME }}/backend:latest
 
+      # Step 5: Set up SSH
       - name: Set up SSH
         run: |
           # Ensure the SSH directory exists with the correct permissions
           mkdir -p ~/.ssh
           chmod 600 ~/.ssh
-      
+
           # Write the SSH private key if it doesn't already exist
           if [ ! -f ~/.ssh/id_rsa ]; then
             echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
             chmod 600 ~/.ssh/id_rsa
           fi
-      
+
           # Add the EC2 host to known_hosts only if it's not already present
           if ! ssh-keygen -F ${{ secrets.EC2_HOST }} > /dev/null; then
             ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
           fi
-        
 
+      # Step 6: Install Docker on EC2
       - name: Install Docker on EC2
         run: |
           ssh -T -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
@@ -71,49 +72,26 @@ jobs:
             sudo docker --version
           EOF
 
-      # # Step 2: Deploy to EC2
-      # - name: Deploy to EC2
-      #   run: |
-      #     ssh -T -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-      #       # Pull the latest images
-      #       docker pull ${{ secrets.DOCKER_USERNAME }}/frontend:latest
-      #       docker pull ${{ secrets.DOCKER_USERNAME }}/backend:latest
-
-      #       # Stop and remove existing containers (if any)
-      #       docker stop frontend || true && docker rm frontend || true
-      #       docker stop backend || true && docker rm backend || true
-
-      #       # Run the frontend container
-      #       docker run -d --name frontend -p 443:5173 ${{ secrets.DOCKER_USERNAME }}/frontend:latest
-
-      #       # Run the backend container
-      #       docker run -d --name backend -p 8080:3000 ${{ secrets.DOCKER_USERNAME }}/backend:latest
-      #     EOF
-
+      # Step 7: Deploy to EC2
       - name: Deploy to EC2
         run: |
-          # ssh -T -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+          ssh -T -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             # Add the user to the Docker group
             sudo usermod -aG docker $USER
             # Ensure the Docker service is running
             sudo systemctl start docker
-            # Verify Docker installation and permissions
-            sudo docker --version
-            sudo docker info
 
-            # Pull Docker images and deploy containers
-            echo "Pulling Docker images and starting containers"
             # Pull the latest images
-            docker pull ${{ secrets.DOCKER_USERNAME }}/frontend:latest
-            docker pull ${{ secrets.DOCKER_USERNAME }}/backend:latest
-      
-            # # Stop and remove existing containers (if any)
-            # docker stop frontend || true && docker rm frontend || true
-            # docker stop backend || true && docker rm backend || true
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/frontend:latest
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/backend:latest
 
-            # Run the frontend container
-            docker run -d --name frontend -p 443:5173 ${{ secrets.DOCKER_USERNAME }}/frontend:latest
+            # Stop and remove existing containers (if any)
+            sudo docker stop frontend || true && sudo docker rm frontend || true
+            sudo docker stop backend || true && sudo docker rm backend || true
 
-            # Run the backend container
-            docker run -d --name backend -p 8080:3000 ${{ secrets.DOCKER_USERNAME }}/backend:latest
+            # Run the frontend container (HTTP on port 80)
+            sudo docker run -d --name frontend -p 5173:5173 ${{ secrets.DOCKER_USERNAME }}/frontend:latest
+
+            # Run the backend container (HTTP on port 8080)
+            sudo docker run -d --name backend -p 3000:3000 ${{ secrets.DOCKER_USERNAME }}/backend:latest
           EOF

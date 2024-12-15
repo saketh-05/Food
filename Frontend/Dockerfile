@@ -13,7 +13,7 @@ RUN npm install
 # Copy the frontend source code
 COPY . .
 
-# Expose port 3333
+# Expose port 
 EXPOSE 5173
 
 # Command to run the React development server
