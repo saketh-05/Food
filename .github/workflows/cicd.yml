@@ -33,20 +33,10 @@ jobs:
       # Step 5: Set up SSH
       - name: Set up SSH
         run: |
-          # Ensure the SSH directory exists with the correct permissions
           mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
-
-          # Write the SSH private key if it doesn't already exist
-          if [ ! -f ~/.ssh/id_rsa ]; then
-            echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
-            chmod 600 ~/.ssh/id_rsa
-          fi
-
-          # Add the EC2 host to known_hosts only if it's not already present
-          if ! ssh-keygen -F ${{ secrets.EC2_HOST }} > /dev/null; then
-            ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
-          fi
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
       # Step 6: Install Docker on EC2
       - name: Install Docker on EC2
