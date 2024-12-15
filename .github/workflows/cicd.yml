@@ -81,7 +81,7 @@ jobs:
 
       - name: Deploy to EC2
         run: |
-          ssh -T -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+          # ssh -T -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             # Add the user to the Docker group
             sudo usermod -aG docker $USER
             # Ensure the Docker service is running
@@ -92,10 +92,17 @@ jobs:
 
             # Pull Docker images and deploy containers
             echo "Pulling Docker images and starting containers"
-            docker pull your-dockerhub-repo/backend:latest
-            docker pull your-dockerhub-repo/frontend:latest
-            docker stop backend || true && docker rm backend || true
+            # Pull the latest images
+            docker pull ${{ secrets.DOCKER_USERNAME }}/frontend:latest
+            docker pull ${{ secrets.DOCKER_USERNAME }}/backend:latest
+      
+            # Stop and remove existing containers (if any)
             docker stop frontend || true && docker rm frontend || true
-            docker run -d --name backend -p 5000:5000 your-dockerhub-repo/backend:latest
-            docker run -d --name frontend -p 80:80 your-dockerhub-repo/frontend:latest
+            docker stop backend || true && docker rm backend || true
+
+            # Run the frontend container
+            docker run -d --name frontend -p 443:5173 ${{ secrets.DOCKER_USERNAME }}/frontend:latest
+
+            # Run the backend container
+            docker run -d --name backend -p 8080:3000 ${{ secrets.DOCKER_USERNAME }}/backend:latest
           EOF
