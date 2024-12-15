@@ -30,12 +30,6 @@ jobs:
           docker build -t ${{ secrets.DOCKER_USERNAME }}/backend:latest -f Backend/Dockerfile ./Frontend
           docker push ${{ secrets.DOCKER_USERNAME }}/backend:latest
 
-  deploy:
-    needs: build-and-push
-    runs-on: ubuntu-latest
-
-    steps:
-      # Step 1: Set up SSH
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
