@@ -21,9 +21,9 @@ FROM nginx:stable-alpine
 # Copy built files from the builder stage
 WORKDIR /usr/share/nginx/html
 
-COPY --from=builder /usr/src/app/build .
-
 RUN rm -rf *
+
+COPY --from=builder /usr/src/app/build .
 
 # Expose port 80 and start nginx
 EXPOSE 80
