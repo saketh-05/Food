@@ -80,6 +80,6 @@ jobs:
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/backend:latest
             sudo docker stop frontend || true && sudo docker rm frontend || true
             sudo docker stop backend || true && sudo docker rm backend || true
-            sudo docker run -d --name frontend -p 5173:5173 ${{ secrets.DOCKER_USERNAME }}/frontend:latest
-            sudo docker run -d --name backend -p 3000:3000 -e MONGODB_USERNAME = '${{secrets.MONGODB_USERNAME}}' -e MONGODB_PASSWORD = '${{secrets.MONGODB_PASSWORD}}' ${{ secrets.DOCKER_USERNAME }}/backend:latest
+            sudo docker run -d -p 8080:5173 --name frontend ${{ secrets.DOCKER_USERNAME }}/frontend:latest
+            sudo docker run -d -p 8081:3000 --name backend -e MONGODB_USERNAME = '${{secrets.MONGODB_USERNAME}}' -e MONGODB_PASSWORD = '${{secrets.MONGODB_PASSWORD}}' ${{ secrets.DOCKER_USERNAME }}/backend:latest
           EOF
