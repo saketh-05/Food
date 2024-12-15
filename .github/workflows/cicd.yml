@@ -34,7 +34,7 @@ jobs:
         run: |
           # Ensure the SSH directory exists with the correct permissions
           mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
+          chmod 600 ~/.ssh
       
           # Write the SSH private key if it doesn't already exist
           if [ ! -f ~/.ssh/id_rsa ]; then
