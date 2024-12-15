@@ -15,7 +15,7 @@ app.use(express.json());
 console.log("connecting");
 
 app.use(cors({
-  origin: 'http://localhost:5173', // Replace with your frontend URL
+  origin: `http://43.204.236.94/:5173`, // Replace with your frontend URL
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
   credentials: true, // Include credentials if needed
 }));
