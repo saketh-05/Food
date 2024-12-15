@@ -37,6 +37,29 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
+      - name: Install Docker on EC2
+        run: |
+          ssh -T -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            # Update package list
+            sudo apt-get update -y
+            # Install Docker prerequisites
+            sudo apt-get install apt-transport-https ca-certificates curl software-properties-common -y
+            # Add Docker's official GPG key
+            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+            # Set up Docker stable repository
+            sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+            # Update package list again
+            sudo apt-get update -y
+            # Install Docker CE
+            sudo apt-get install docker-ce -y
+            # Start Docker service
+            sudo systemctl start docker
+            # Enable Docker to start on boot
+            sudo systemctl enable docker
+            # Verify Docker installation
+            sudo docker --version
+          EOF
+
       # Step 2: Deploy to EC2
       - name: Deploy to EC2
         run: |
