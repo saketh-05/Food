@@ -2,7 +2,7 @@ import Headerls from "../components/Login-Signup/Headerls";
 import Login from "../components/Login-Signup/Login";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
-import GoogleLogin from "../components/GoogleLogin";
+// import GoogleLogin from "../components/GoogleLogin";
 import { useNavigate } from "react-router-dom";
 import confetti from "canvas-confetti";
 import { useState } from "react";
@@ -89,7 +89,7 @@ export default function LoginPage({ onLogin }) {
               linkName='Sign Up'
               linkUrl='/signup'
             />
-            <GoogleLogin onSuccess={handleLoginSuccess} onError={handleLoginError}/>
+            {/* <GoogleLogin onSuccess={handleLoginSuccess} onError={handleLoginError}/> */}
             <Login onLogin={onLogin} />
           </div>
         </div>
