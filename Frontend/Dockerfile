@@ -1,5 +1,5 @@
 # Use the official Node.js 20 image
-FROM node:20
+FROM node:alpine3.18 as builder
 
 # Set the working directory
 WORKDIR /usr/src/app
@@ -13,8 +13,17 @@ RUN npm install
 # Copy the frontend source code
 COPY . .
 
-# Expose port 
-EXPOSE 5173
+RUN npm run build
 
-# Command to run the React development server
-CMD ["npm", "run", "dev"]
+# Expose port 
+FROM nginx:stable-alpine
+
+# Copy built files from the builder stage
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+RUN rm -rf *
+
+# Expose port 80 and start nginx
+EXPOSE 80
+
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
