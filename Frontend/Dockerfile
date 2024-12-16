@@ -1,5 +1,5 @@
 # Use the official Node.js 20 image
-FROM node:18-alphine AS builder
+FROM node:18 AS builder
 
 # Set the working directory
 WORKDIR /app
