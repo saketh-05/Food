@@ -38,7 +38,7 @@ export default function LoginPage({ onLogin }) {
     const userData = jwtDecode(response.credential);
     // localStorage.setItem("userData", JSON.stringify(userData));
     console.log('User Data:', userData);
-    await fetch('http://localhost:3000/googlelogin', {
+    await fetch('http://api.foodtube.me/googlelogin', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
