@@ -1,8 +1,8 @@
 # Use the official Node.js 20 image
-FROM node:18 as builder
+FROM node:18-alphine AS builder
 
 # Set the working directory
-WORKDIR /usr/src/app
+WORKDIR /app
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
@@ -15,17 +15,12 @@ COPY . .
 
 RUN npm run build
 
-# Expose port 
 FROM nginx:stable-alpine
 
-# Copy built files from the builder stage
-WORKDIR /usr/share/nginx/html
+COPY --from=builder /app/dist /usr/share/nginx/html
 
-RUN rm -rf *
+COPY config/nginx.conf /etc/nginx/conf.d/default.conf
 
-COPY --from=builder /usr/src/app/dist .
-
-# Expose port 80 and start nginx
 EXPOSE 80
 
 ENTRYPOINT ["nginx", "-g", "daemon off;"]

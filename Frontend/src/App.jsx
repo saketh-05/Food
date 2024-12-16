@@ -59,11 +59,9 @@ function App() {
               element={<LoginPage onLogin={toggleLogin} />}
             />
             <Route path='/signup' element={<SignupPage />} />
-            <Route path='*' element={<NotFoundPage />} />
           </>
         )}
         {!isLogin && <Route path='*' element={<Navigate to='/login' />} />}
-        {isLogin && <Route path='*' element={<Navigate to='/' />} />}
       </Routes>
       <BackgroundAudio />
     </BrowserRouter>
