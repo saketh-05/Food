@@ -1,0 +1,38 @@
+# frontend-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  replicas: 2 # Number of pod replicas
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: sakethsurya/frontend:latest # Replace with your frontend Docker image
+        ports:
+        - containerPort: 80
+---
+# frontend-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  labels:
+    app: frontend
+spec:
+  type: LoadBalancer # Exposes the service via AWS ELB
+  ports:
+  - port: 8083
+    targetPort: 80
+  selector:
+    app: frontend
+

@@ -1,0 +1,38 @@
+# backend-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: backend
+spec:
+  replicas: 2 # Number of pod replicas
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: sakethsurya/backend:latest # Replace with your backend Docker image
+        ports:
+        - containerPort: 5000 # Change based on your backend app port
+---
+# backend-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  labels:
+    app: backend
+spec:
+  type: LoadBalancer # Internal communication within the cluster
+  ports:
+  - port: 8084
+    targetPort: 3000
+  selector:
+    app: backend
+
