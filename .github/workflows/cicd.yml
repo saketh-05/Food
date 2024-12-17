@@ -1,4 +1,4 @@
-name: Build and Deploy to EC2
+name: Deploy to EKS
 
 on:
   push:
@@ -6,80 +6,127 @@ on:
       - main
 
 jobs:
-  build-and-push:
+  deploy:
     runs-on: ubuntu-latest
-
     steps:
-      # Step 1: Checkout code
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      # Step 2: Log in to Docker Hub
-      - name: Log in to Docker Hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+    - name: Set up AWS CLI
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{secrets.AWS_REGION}} # Replace with your EKS cluster's region
 
-      # Step 3: Build and push frontend image
-      - name: Build and push frontend Docker image
-        run: |
+    - name: Update kubeconfig
+      run: aws eks update-kubeconfig --region ${{secrets.AWS_REGION}} --name my-eks-cluster
+
+    - name: Log in to Docker Hub
+      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+    - name: Build and push frontend Docker image
+      run: |
           docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend:latest -f Frontend/Dockerfile ./Frontend
           docker push ${{ secrets.DOCKER_USERNAME }}/frontend:latest
 
-      # Step 4: Build and push backend image
-      - name: Build and push backend Docker image
-        run: |
+    - name: Build and push backend Docker image
+      run: |
           docker build -t ${{ secrets.DOCKER_USERNAME }}/backend:latest -f Backend/Dockerfile ./Backend
           docker push ${{ secrets.DOCKER_USERNAME }}/backend:latest
 
-      # Step 5: Set up SSH
-      - name: Set up SSH
-        run: |
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
+    - name: Deploy to EKS
+      run: |
+        kubectl apply -f k8s/deployment.yaml
+        kubectl apply -f k8s/service.yaml
 
-          # Save the private key
-          echo "${{ secrets.EC2_SSH_KEY }}" | tr -d '\r' > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
 
-          # Add EC2 host to known_hosts
-          ssh-keyscan -H "${{ secrets.EC2_HOST }}" >> ~/.ssh/known_hosts || {
-            echo "Failed to add host to known_hosts"; exit 1;
-          }
 
-          echo "SSH setup completed successfully"
+#Below is ec2 deployment related yaml file
 
-      # - name: Debug SSH
-      #   run: |
-      #     echo "EC2 Host: ${{ secrets.EC2_HOST }}"
-      #     echo "Checking ~/.ssh directory:"
-      #     ls -la ~/.ssh
-      #     echo "Testing SSH connection:"
-      #     ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} exit
+
+# name: Build and Deploy to EC2
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+# jobs:
+#   build-and-push:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       # Step 1: Checkout code
+#       - name: Checkout repository
+#         uses: actions/checkout@v3
+
+#       # Step 2: Log in to Docker Hub
+#       - name: Log in to Docker Hub
+#         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+#       # Step 3: Build and push frontend image
+#       - name: Build and push frontend Docker image
+#         run: |
+#           docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend:latest -f Frontend/Dockerfile ./Frontend
+#           docker push ${{ secrets.DOCKER_USERNAME }}/frontend:latest
+
+#       # Step 4: Build and push backend image
+#       - name: Build and push backend Docker image
+#         run: |
+#           docker build -t ${{ secrets.DOCKER_USERNAME }}/backend:latest -f Backend/Dockerfile ./Backend
+#           docker push ${{ secrets.DOCKER_USERNAME }}/backend:latest
+
+#       # Step 5: Set up SSH
+#       - name: Set up SSH
+#         run: |
+#           mkdir -p ~/.ssh
+#           chmod 700 ~/.ssh
+
+#           # Save the private key
+#           echo "${{ secrets.EC2_SSH_KEY }}" | tr -d '\r' > ~/.ssh/id_rsa
+#           chmod 600 ~/.ssh/id_rsa
+
+#           # Add EC2 host to known_hosts
+#           ssh-keyscan -H "${{ secrets.EC2_HOST }}" >> ~/.ssh/known_hosts || {
+#             echo "Failed to add host to known_hosts"; exit 1;
+#           }
+
+#           echo "SSH setup completed successfully"
+
+#       # - name: Debug SSH
+#       #   run: |
+#       #     echo "EC2 Host: ${{ secrets.EC2_HOST }}"
+#       #     echo "Checking ~/.ssh directory:"
+#       #     ls -la ~/.ssh
+#       #     echo "Testing SSH connection:"
+#       #     ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} exit
         
 
-      # Step 6: Install Docker on EC2
-      - name: Install Docker on EC2
-        run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-            set -e
-            sudo apt-get update -y
-            sudo apt-get install apt-transport-https ca-certificates curl software-properties-common -y
-            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-            sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-            sudo apt-get update -y
-            sudo apt-get install docker-ce -y
-            sudo systemctl enable docker
-            sudo systemctl start docker
-          EOF
-#-e MONGODB_USERNAME = '${{secrets.MONGODB_USERNAME}}' -e MONGODB_PASSWORD = '${{secrets.MONGODB_PASSWORD}}'
-      # Step 7: Deploy to EC2
-      - name: Deploy to EC2
-        run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-            set -e
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/frontend:latest
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/backend:latest
-            sudo docker stop frontend || true && sudo docker rm frontend || true
-            sudo docker stop backend || true && sudo docker rm backend || true
-            sudo docker run -d --name frontend -p 8081:80 ${{ secrets.DOCKER_USERNAME }}/frontend:latest
-            sudo docker run -d --name backend -p 8080:3000 ${{ secrets.DOCKER_USERNAME }}/backend:latest 
-          EOF
+#       # Step 6: Install Docker on EC2
+#       - name: Install Docker on EC2
+#         run: |
+#           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+#             set -e
+#             sudo apt-get update -y
+#             sudo apt-get install apt-transport-https ca-certificates curl software-properties-common -y
+#             curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+#             sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+#             sudo apt-get update -y
+#             sudo apt-get install docker-ce -y
+#             sudo systemctl enable docker
+#             sudo systemctl start docker
+#           EOF
+# #-e MONGODB_USERNAME = '${{secrets.MONGODB_USERNAME}}' -e MONGODB_PASSWORD = '${{secrets.MONGODB_PASSWORD}}'
+#       # Step 7: Deploy to EC2
+#       - name: Deploy to EC2
+#         run: |
+#           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+#             set -e
+#             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/frontend:latest
+#             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/backend:latest
+#             sudo docker stop frontend || true && sudo docker rm frontend || true
+#             sudo docker stop backend || true && sudo docker rm backend || true
+#             sudo docker run -d --name frontend -p 8081:80 ${{ secrets.DOCKER_USERNAME }}/frontend:latest
+#             sudo docker run -d --name backend -p 8080:3000 ${{ secrets.DOCKER_USERNAME }}/backend:latest 
+#           EOF
