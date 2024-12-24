@@ -29,7 +29,7 @@ metadata:
   labels:
     app: backend
 spec:
-  type: LoadBalancer # Internal communication within the cluster
+  type: ClusterIP # Internal communication within the cluster
   ports:
   - port: 8084
     targetPort: 3000
