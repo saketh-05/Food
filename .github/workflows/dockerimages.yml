@@ -9,15 +9,20 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
     - name: Log in to Docker Hub
       run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
     - name: Build and push frontend Docker image
+      working-directory: ./Food/Frontend
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend:latest -f Frontend/Dockerfile ../../Frontend
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend:latest -f Frontend/Dockerfile .
         docker push ${{ secrets.DOCKER_USERNAME }}/frontend:latest
 
     - name: Build and push backend Docker image
+      working-directory: ./Food/Backend
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/backend:latest -f Backend/Dockerfile ../../Backend
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/backend:latest -f Backend/Dockerfile .
         docker push ${{ secrets.DOCKER_USERNAME }}/backend:latest
