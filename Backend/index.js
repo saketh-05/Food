@@ -3,6 +3,7 @@ const cors = require("cors");
 //const fs = require("fs");
 const http = require("http");
 const app = express();
+const port = process.env.PORT || 8080;
 app.use(express.json());
 
 // const key = fs.readFileSync('localhost-key.pem', 'utf8');
@@ -20,7 +21,7 @@ app.use(cors({
   credentials: true, // Include credentials if needed
 }));
 
-http.createServer(app).listen(8080, () => {
+http.createServer(app).listen(port, () => {
   console.log(`Server is running on port 3000`);
 });
 
