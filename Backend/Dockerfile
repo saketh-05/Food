@@ -13,8 +13,8 @@ RUN npm install
 # Copy the backend source code
 COPY . .
 
-# Expose port 3000
-EXPOSE 3000
+# Expose port
+EXPOSE 8080
 
 # Command to run your Node.js serve
 ENTRYPOINT ["node","index.js"]
