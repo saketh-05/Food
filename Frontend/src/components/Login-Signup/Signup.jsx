@@ -65,8 +65,9 @@ export default function Signup() {
 
   //handle Signup API Integration here
   const createAccount = async () => {
+    const backendUrl = import.meta.env.VITE_DEV_BACKEND_URL;
     console.log(signupState);
-    await fetch("http://api.foodtube.me/signup", {
+    await fetch(`${backendUrl}/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

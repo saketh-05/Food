@@ -60,9 +60,11 @@ export default function Login({ onLogin }) {
     authenticateUser();
   };
   const authenticateUser = async () => {
+    const backendUrl = import.meta.env.VITE_DEV_BACKEND_URL;
+    console.log("backendUrl", backendUrl);
     try {
       console.log(loginState);
-      const response = await fetch("http://api.foodtube.me/login", {
+      const response = await fetch(`${backendUrl}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json", // Specify the content type

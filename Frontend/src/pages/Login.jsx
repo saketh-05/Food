@@ -38,7 +38,9 @@ export default function LoginPage({ onLogin }) {
     const userData = jwtDecode(response.credential);
     // localStorage.setItem("userData", JSON.stringify(userData));
     console.log('User Data:', userData);
-    await fetch('http://api.foodtube.me/googlelogin', {
+    const backendUrl = import.meta.env.VITE_DEV_BACKEND_URL;
+    console.log('Backend URL:', backendUrl);
+    await fetch(`${backendUrl}/googlelogin`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

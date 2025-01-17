@@ -45,7 +45,7 @@ export const ProfilePage = () => {
           throw new Error("No token found");
         }
         console.log("Token found:", token);
-        const payload = await jwtDecode(token);
+        const payload = jwtDecode(token);
         console.log("Profile data fetched:", payload);
         setProfile({
           name: payload.name,

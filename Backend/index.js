@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 //const fs = require("fs");
+require("dotenv").config({path: "../.env"});
 const http = require("http");
 const app = express();
 const port = process.env.PORT || 8080;
@@ -16,7 +17,7 @@ app.use(express.json());
 console.log("connecting");
 
 app.use(cors({
-  origin: 'http://foodtube.me', // Replace with your frontend URL
+  origin: process.env.VITE_DEV_FRONTEND_URL, // Replace with your frontend URL (Dev✅ / Deploy)
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
   credentials: true, // Include credentials if needed
 }));

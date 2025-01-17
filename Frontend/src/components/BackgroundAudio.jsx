@@ -17,8 +17,8 @@ export default function BackgroundAudio() {
     }
   }, [isMuted]);
   useEffect(() => {
-    // Automatically hide the prompt after 5 seconds
-    const timer = setTimeout(() => setShowPrompt(false), 5000);
+    // Automatically hide the prompt after 15 seconds
+    const timer = setTimeout(() => setShowPrompt(false), 15000);
     return () => clearTimeout(timer);
   }, []);
 

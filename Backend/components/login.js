@@ -1,12 +1,11 @@
-const express = require('express');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-require('dotenv').config();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const express = require("express");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+require("dotenv").config({ path: "../../.env" });
+const { MongoClient, ServerApiVersion } = require("mongodb");
 const router = express.Router();
 
-const uri =
-  `mongodb+srv://dsakethsurya:saketh1234@merncluster.c3k9g.mongodb.net/?retryWrites=true&w=majority&appName=MernCluster`;
+const uri = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@merncluster.c3k9g.mongodb.net/?retryWrites=true&w=majority&appName=MernCluster`;
 
 // Initialize MongoDB Client
 const client = new MongoClient(uri, {
@@ -31,7 +30,7 @@ const db = client.db("Food");
 const usersCollection = db.collection("users");
 
 // Login Route
-router.post('/login', async (req, res) => {
+router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   console.log(email, password);
   try {
@@ -39,57 +38,66 @@ router.post('/login', async (req, res) => {
     const existingUser = await usersCollection.findOne({ email });
 
     if (!existingUser) {
-      return res.status(400).json({ message: 'User does not exist' });
+      return res.status(400).json({ message: "User does not exist" });
     }
 
     // Check if the password is correct
-    const passwordCorrect = await bcrypt.compare(password, existingUser.password);
+    const passwordCorrect = await bcrypt.compare(
+      password,
+      existingUser.password
+    );
 
     if (!passwordCorrect) {
-      return res.status(400).json({ message: 'Invalid credentials' });
+      return res.status(400).json({ message: "Invalid credentials" });
     }
 
     // Generate JWT using jose
-    console.log(existingUser._id," and ",existingUser.username," and ",existingUser.email);
+    console.log(
+      existingUser._id,
+      " and ",
+      existingUser.username,
+      " and ",
+      existingUser.email
+    );
     const payload = {
       userID: existingUser._id,
       name: existingUser.username,
       email: existingUser.email,
     };
-    const token = jwt.sign(payload, 'my_secret', {expiresIn:'3h'});
+    const token = jwt.sign(payload, "my_secret", { expiresIn: "3h" });
     res.status(200).json({ message: "Login successful", token });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 
-router.post('/googlelogin', async (req, res) => {
+router.post("/googlelogin", async (req, res) => {
   const { email, name } = req.body;
   try {
-      console.log('creating google user token...');
-      console.log('Payload: ',email,name);
-      const identifyUser = await usersCollection.findOne({email});
-      if(!identifyUser){
-        console.log("triggering google user identification");
-        const newUser = {
-          username : name,
-          email,
-        };
-        // Insert the new user into the database
-        await usersCollection.insertOne(newUser);
-        console.log("added google user");
-      }
-      // Generate JWT using jsonwebtoken
-      const payload = {
-        name,
-        email
+    console.log("creating google user token...");
+    console.log("Payload: ", email, name);
+    const identifyUser = await usersCollection.findOne({ email });
+    if (!identifyUser) {
+      console.log("triggering google user identification");
+      const newUser = {
+        username: name,
+        email,
       };
-      const token = jwt.sign(payload, 'my_secret', {expiresIn:'3h'});
-      res.status(200).json({ message: "Login successful", token });
+      // Insert the new user into the database
+      await usersCollection.insertOne(newUser);
+      console.log("added google user");
+    }
+    // Generate JWT using jsonwebtoken
+    const payload = {
+      name,
+      email,
+    };
+    const token = jwt.sign(payload, "my_secret", { expiresIn: "3h" });
+    res.status(200).json({ message: "Login successful", token });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 

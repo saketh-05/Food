@@ -1,12 +1,11 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
-require("dotenv").config();
+require("dotenv").config({ path: "../.env" });
 const { MongoClient, ServerApiVersion } = require("mongodb");
 const router = express.Router();
 
 // MongoDB Atlas URI
-const uri =
-`mongodb+srv://dsakethsurya:saketh1234@merncluster.c3k9g.mongodb.net/?retryWrites=true&w=majority&appName=MernCluster`;
+const uri = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@merncluster.c3k9g.mongodb.net/?retryWrites=true&w=majority&appName=MernCluster`;
 
 // Initialize MongoDB Client
 const client = new MongoClient(uri, {
