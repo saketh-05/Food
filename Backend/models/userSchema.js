@@ -26,7 +26,13 @@ const userSchema = new mongoose.Schema({
     pronoun:{
         type:String,
         maxlength:3
-    }
-}) 
+    },
+    bookmarks: [
+        {
+            recipeId: { type: mongoose.Schema.Types.ObjectId, ref: "Recipe" },
+            name: String
+        }
+    ]
+}) ;
 
 module.exports = mongoose.model('User',userSchema)
