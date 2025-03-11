@@ -1,14 +1,16 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-require("dotenv").config({ path: "../.env" });
+import express from "express";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import cors from "cors";
 
-const User = require("./models/userSchema");
-const Recipe = require("./models/recipeSchema");
+dotenv.config(); // Load environment variables
 
 const app = express();
-const port = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8080;
+const MONGODB_URI = process.env.MONGODB_URI;
 
+// Middleware
+app.use(cors());
 app.use(express.json());
 app.use(cors());
 
@@ -38,26 +40,12 @@ app.post("/api/bookmark", async (req, res) => {
     }
 });
 
-// Remove a recipe from bookmarks
-app.delete("/api/bookmark", async (req, res) => {
-    const { userId, recipeId } = req.body;
-
-    try {
-        const user = await User.findById(userId);
-        if (!user) return res.status(404).json({ message: "User not found" });
-
-        user.bookmarks = user.bookmarks.filter(
-            (bookmark) => bookmark.recipeId.toString() !== recipeId
-        );
-
-        await user.save();
-
-        res.status(200).json({ message: "Recipe removed from bookmarks", bookmarks: user.bookmarks });
-    } catch (error) {
-        res.status(500).json({ message: "Internal server error", error });
-    }
+// Test Route
+app.get("/", (req, res) => {
+    res.send("🍔 Welcome to FoodTube API!");
 });
 
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+// Start Server
+app.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
 });
