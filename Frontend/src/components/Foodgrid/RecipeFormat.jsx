@@ -1,8 +1,33 @@
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import parse from "html-react-parser";
-import './RecipeFormat.css';
+import { useState } from "react";
+import "./RecipeFormat.css";
 
-export default function Recipe({ recipe }) {
+export default function Recipe({ recipe, userId }) {
+  const [bookmarked, setBookmarked] = useState(false);
+
+  const handleBookmark = async () => {
+    try {
+      const response = await fetch("/api/bookmark", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          recipeId: recipe._id,
+          recipeName: recipe.title,
+        }),
+      });
+
+      if (response.ok) {
+        setBookmarked(true);
+      }
+    } catch (error) {
+      console.error("Error bookmarking recipe:", error);
+    }
+  };
+
   return (
     <HelmetProvider>
       <div className="recipe-page">
@@ -12,39 +37,12 @@ export default function Recipe({ recipe }) {
         <div className="recipe-container">
           <div className="recipe-header">
             <img src={recipe.image} alt={recipe.title} className="recipe-image" />
-            <h1 className="recipe-title">{recipe.title}</h1>
-            <div className="recipe-rating">
-              <span className="rating-label">Rating: </span>
-              <span className="rating-score">{Math.floor(recipe.spoonacularScore/10)}/10</span>
-            </div>
+            <button className="bookmark-btn" onClick={handleBookmark}>
+              {bookmarked ? "Bookmarked" : "Bookmark"}
+            </button>
           </div>
-          
           <div className="recipe-content">
-            <section className="recipe-section">
-              <h2 className="section-title">Ingredients</h2>
-              <ul className="ingredient-list">
-                {recipe.extendedIngredients.map((ingredient, index) => (
-                  <li key={index} className="ingredient-item">{ingredient.name}</li>
-                ))}
-              </ul>
-            </section>
-
-            <section className="recipe-section">
-              <h2 className="section-title">Summary</h2>
-              <div className="recipe-summary">{parse(recipe.summary)}</div>
-            </section>
-
-            <section className="recipe-section">
-              <h2 className="section-title">Nutrition</h2>
-              <ul className="nutrition-list">
-                {recipe.nutrition.nutrients.map((nutrient, index) => (
-                  <li key={index} className="nutrition-item">
-                    <span className="nutrient-name">{nutrient.name}</span>
-                    <span className="nutrient-value">{nutrient.amount} {nutrient.unit}</span>
-                  </li>
-                ))}
-              </ul>
-            </section>
+            {parse(recipe.description)}
           </div>
         </div>
       </div>

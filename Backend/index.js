@@ -1,63 +1,54 @@
-const express = require("express");
-const cors = require("cors");
-//const fs = require("fs");
-require("dotenv").config({path: "../.env"});
-const http = require("http");
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import dotenv from "dotenv";
+import recipeRoutes from "./routes/recipeRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import bookmarkRoutes from "./routes/bookmarkRoutes.js";
+
+dotenv.config();
+
 const app = express();
-const port = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8080;
+const MONGODB_URI = process.env.MONGODB_URI;
+
+// Middleware
+app.use(cors());
 app.use(express.json());
+app.use(cors());
 
-// const key = fs.readFileSync('localhost-key.pem', 'utf8');
-// const cert = fs.readFileSync('localhost.pem', 'utf8');
-// const options = { key, cert };
+// Add a recipe to bookmarks
+app.post("/api/bookmark", async (req, res) => {
+    const { userId, recipeId, recipeName } = req.body;
 
-const signupRoute = require("./components/signup");
-const loginRoute = require("./components/login");
-app.use(express.json());
-console.log("connecting");
+    try {
+        const user = await User.findById(userId);
+        if (!user) return res.status(404).json({ message: "User not found" });
 
-app.use(cors({
-  origin: process.env.VITE_DEV_FRONTEND_URL, // Replace with your frontend URL (Dev✅ / Deploy)
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
-  credentials: true, // Include credentials if needed
-}));
+        // Check if the recipe is already bookmarked
+        const alreadyBookmarked = user.bookmarks.some(
+            (bookmark) => bookmark.recipeId.toString() === recipeId
+        );
 
-http.createServer(app).listen(port, () => {
-  console.log(`Server is running on port 3000`);
+        if (alreadyBookmarked) {
+            return res.status(400).json({ message: "Recipe already bookmarked" });
+        }
+
+        user.bookmarks.push({ recipeId, name: recipeName });
+        await user.save();
+
+        res.status(200).json({ message: "Recipe bookmarked successfully", bookmarks: user.bookmarks });
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error", error });
+    }
 });
 
-app.use("/", loginRoute);
-app.use("/", signupRoute);
-
-//to make things work correctly test route is added
-app.post('/test',async (req, res) => {
-  console.log(`Headers:`, req.headers);
-  console.log(`Body:`, req.body);
-  console.log("Test route works!");
-  res.send("Test route works!");
+// Test Route
+app.get("/", (req, res) => {
+    res.send("🍔 Welcome to FoodTube API!");
 });
 
-app.get('/test',(req, res) => {
-  console.log(`Headers:`, req.headers);
-  console.log(`Body:`, req.body);
-  console.log("Test route works!");
-  res.send("Test route works!");
-});
-//Logging the requests for debugging
-// app.use((req, res, next) => {
-//   console.log(`Incoming request: ${req.method} ${req.url}`);
-//   console.log(`Headers:`, req.headers);
-//   console.log(`Body:`, req.body);
-//   res.send("Request logged");
-//   next();
-// });
-// This is to test for 404 error
-
-//This is to test for listening to the port
-
-app.get('/', (req, res) => {
-  res.send('Hello, HTTPS world!');
-});
-app.get('/login', (req, res) => {
-  res.send('Hello,Login world!');
+// Start Server
+app.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
 });
