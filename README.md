@@ -1,35 +1,26 @@
-# FoodTube Project
+# Food-main Project
 
 ## Overview
-The **Food-main** project is a web application designed for managing food-related services. It features a React-based frontend, a Node.js backend with Express, and MongoDB for database interactions. The project is containerized using Docker for seamless deployment.
-
----
+**Food-main** is a comprehensive web application designed to manage food-related services. It features a React-based frontend, a Node.js backend with Express, and MongoDB for database management.
 
 ## Features
 - User Authentication (Signup, Login)
 - Recipe Management (Create, Read)
-- Secure backend with JWT-based authentication
-- React + Vite frontend for a fast development experience
-- Containerized backend for consistent deployment environments
-
----
+- JWT-based secure authentication
+- Fast development with React + Vite
+- Containerized backend using Docker
 
 ## Technology Stack
 
 ### Frontend
 - **Framework**: React with Vite
 - **Languages**: JavaScript, JSX
-- **Plugins**:
-  - `@vitejs/plugin-react`
-  - `eslint`
+- **Plugins**: `@vitejs/plugin-react`, `eslint`
 
 ### Backend
 - **Framework**: Node.js with Express
 - **Languages**: JavaScript
-- **Libraries**:
-  - `bcrypt`
-  - `jsonwebtoken`
-  - `mongoose`
+- **Libraries**: `bcrypt`, `jsonwebtoken`, `mongoose`
 
 ### Database
 - **Database**: MongoDB
@@ -38,8 +29,6 @@ The **Food-main** project is a web application designed for managing food-relate
 ### Deployment
 - **Containerization**: Docker
 - **CI/CD**: GitHub Actions
-
----
 
 ## Getting Started
 
@@ -91,8 +80,6 @@ cd Food-main
    npm run dev
    ```
 
----
-
 ## Deployment
 
 ### Docker Deployment
@@ -109,29 +96,21 @@ cd Food-main
    docker run -p 5000:5000 food-backend
    ```
 
----
-
 ## CI/CD
-- The project includes a GitHub Actions workflow for automated deployment and testing (`.github/workflows/cicd.yml`).
-
----
+Automated deployment and testing are managed with GitHub Actions (`.github/workflows/cicd.yml`).
 
 ## Contributing
-Contributions are welcome! Please follow these steps:
+Contributions are welcome! Please:
 1. Fork the repository.
-2. Create a new branch for your feature/fix.
-3. Submit a pull request with a detailed explanation of your changes.
-
----
+2. Create a new branch for your feature or fix.
+3. Submit a pull request with a detailed explanation.
 
 ## License
 This project is licensed under the [MIT License](LICENSE).
 
----
-
 ## Acknowledgements
 - React + Vite
-- Node.js & Express
+- Node.js & Express.js 
 - MongoDB
 - Docker
-
+- Kubernetes
