@@ -18,7 +18,7 @@ export default function Recipe({ recipe, userId }) {
           recipeId: recipe._id,
           recipeName: recipe.title,
         }),
-      });
+      }).then((res) => res.json());
 
       if (response.ok) {
         setBookmarked(true);
