@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "mongodb": "^6.10.0",
-    "toastify": "^2.0.1"
-  }
-}

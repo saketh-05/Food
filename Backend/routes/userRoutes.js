@@ -3,7 +3,7 @@ import express from "express";
 const router = express.Router();
 
 // Sample route
-router.get("/", (req, res) => {
+router.get("/api/user", (req, res) => {
     res.send("User API is working!");
 });
 

@@ -4,7 +4,7 @@ import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 const GoogleSignIn = ({ onSuccess, onError }) => {
   const clientID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
   return (
-    <GoogleOAuthProvider clientId={clintID}>
+    <GoogleOAuthProvider clientId={clientID}>
       <GoogleLogin
         onSuccess={onSuccess}
         onError={onError}
