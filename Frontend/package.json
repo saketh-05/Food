@@ -25,6 +25,7 @@
     "jwt-decode": "^4.0.0",
     "jwt-token": "^1.0.9",
     "lucide-react": "^0.462.0",
+    "netlify-cli": "^21.5.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-helmet-async": "^2.0.5",
